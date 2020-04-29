@@ -96,7 +96,7 @@ function PlayLabel() {
     }
 
     if (isMobile()) {
-        
+
     }
     else {
         this.text = this.messages["pc"]
@@ -104,7 +104,7 @@ function PlayLabel() {
 
     this.draw = function() {
         ctx.fillStyle = this.color
-        ctx.font = tileSize*2 + "Comic Sans MS"
+        ctx.font = tileSize*2 + "px Comic Sans MS"
         ctx.fillText(this.text, WIDTH / 2 - ctx.measureText(this.text).width / 2, HEIGHT / 2)
     }
 }
