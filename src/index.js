@@ -1,24 +1,56 @@
 var canvas, ctx, WIDTH, HEIGHT, bpm, tileSize;
+var snake, playLabel
+var globalTouch = [], offset = []
 
 window.addEventListener("resize", resizeWindow)
 
 window.addEventListener("keydown", keyDown)
 
+window.addEventListener("touchstart", touchStart)
+window.addEventListener("touchMove", touchMove)
+window.addEventListener("touchEnd", touchEnd)
+
+function isMobile() {
+    return /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent)
+}
+
+function touchMove(e) {
+    var touch = e.touches[0]
+
+    offset = [touch.pageX - globalTouch[0], touch.pageY - globalTouch[1]]
+}
+
+function touchEnd(e) {
+    if (Math.abs(offset[0] > Math.abs(offset[1]))) {
+        snake.direction = [offset[0] / Math.abs(offset[0]), 0]
+    }
+    else {
+        snake.direction = [0, offset[1] / Math.abs(offset[1])]
+    }
+}
+
+function touchStart(e) {
+    e.preventDefault()
+    
+    var touch = e.touches[0]
+    globaltouch = [touch.pageX, touch.pageY]
+}
+
 function keyDown(e) {
     console.log(e)
-    if(e.key == "ArrowUp" && snake.direction != [0, 1]) {
+    if(e.key == "ArrowUp" || e.key.toLowerCase() == "w") {
             playing = true
         snake.direction = [0, -1]
     }
-    if(e.key == "ArrowDown" && snake.direction != [0, -1]) {
+    if(e.key == "ArrowDown" || e.key.toLowerCase() == "s") {
             playing = true
         snake.direction = [0, 1]
     }
-    if(e.key == "ArrowLeft" && snake.direction != [1, 0]) {
+    if(e.key == "ArrowLeft" || e.key.toLowerCase() == "a") {
             playing = true
         snake.direction = [-1, 0]
     }
-    if(e.key == "ArrowRight" && snake.direction != [-1, 0]) {
+    if(e.key == "ArrowRight" || e.key.toLowerCase() == "d") {
             playing = true
         snake.direction = [1, 0]
     }
@@ -50,13 +82,36 @@ function resizeWindow() {
 
 function newGame() {
     snake = new Snake()
-
+    playLabel = new PlayLabel()
     playing = false
+}
+
+function PlayLabel() {
+    this.text;
+    this.color= '#393852'
+    this.messages = {
+        portrait: "gire a tela pra jogar",
+        landscape: "arrasta pra jogar",
+        pc: "aperte as setas ou WASD pra jogar"
+    }
+
+    if (isMobile()) {
+        
+    }
+    else {
+        this.text = this.messages["pc"]
+    }
+
+    this.draw = function() {
+        ctx.fillStyle = this.color
+        ctx.font = tileSize*2 + "Comic Sans MS"
+        ctx.fillText(this.text, WIDTH / 2 - ctx.measureText(this.text).width / 2, HEIGHT / 2)
+    }
 }
 
 function Snake() {
     this.body = [[10,10],[10,11],[10,12]]
-    this.color = '#393852'
+    this.color = '#000'
     this.direction = [0, -1]
 
     this.update = function() {
@@ -112,7 +167,10 @@ function run() {
 function draw() {
     ctx.clearRect(0 ,0 ,WIDTH, HEIGHT)
 
-    snake.draw()
+    snake.draw();
+    if (!playing) {
+        playLabel.draw()
+    }
 }
  
 init()
