@@ -1,5 +1,5 @@
 var canvas, ctx, WIDTH, HEIGHT, bpm, tileSize;
-var snake, playLabel
+var snake, playLabel, frisk
 var globalTouch = [], offset = []
 
 window.addEventListener("resize", resizeWindow)
@@ -68,6 +68,7 @@ function init() {
     bpm = 1200
 
     newGame()
+    frisk.update()
     run()
 }
 function resizeWindow() {
@@ -83,7 +84,27 @@ function resizeWindow() {
 function newGame() {
     snake = new Snake()
     playLabel = new PlayLabel()
+    frisk = new Frisk()
     playing = false
+}
+
+function Frisk() {
+    this.color = "#ff0000"
+    this.pos = []
+
+    this.update = function() {
+        this.pos = [getRandom(WIDTH), getRandom(HEIGHT)]
+        this.draw()
+        console.log("frisk")
+    }
+
+    this.draw = function() {
+        ctx.fillRect(this.pos[0] * tileSize, this.pos[1] * tileSize, tileSize, tileSize)
+    }
+}
+
+function getRandom(max) {
+    return Math.floor(Math.random() * max + 1)
 }
 
 function PlayLabel() {
@@ -149,6 +170,14 @@ function Snake() {
         for (var i = 0; i < this.body.length; i++) {
             ctx.fillRect(this.body[i][0] * tileSize, this.body[i][1] * tileSize, tileSize, tileSize)
         }
+    }
+}
+
+function collision() {
+    if(snake.body[0] == frisk.pos) {
+        frisk.pos.pop()
+        frisk.update()
+        snake.body.splice(0,0, snake.body[0])
     }
 }
 
