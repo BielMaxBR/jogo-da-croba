@@ -77,6 +77,12 @@ function Snake() {
             }
         }
 
+        if (nextPos[0] == this.body[1][0] && nextPos[1] == this.body[1][1]) {
+            this.body.reverse()
+            nextPos = [this.body[0][0] + this.direction[0],this.body[0][1] + this.direction[1]]
+
+        }
+
 
         this.body.pop()
         this.body.splice(0,0, nextPos)
@@ -100,7 +106,7 @@ function run() {
     update()
     draw()
     
-    setTimeout(run, 60/bpm*1000)
+    setTimeout(run, (60/bpm)*1000)
 }
 
 function draw() {
