@@ -37,7 +37,7 @@ function touchStart(e) {
 }
 
 function keyDown(e) {
-    console.log(e)
+    
     if(e.key == "ArrowUp" || e.key.toLowerCase() == "w") {
             playing = true
         snake.direction = [0, -1]
@@ -93,12 +93,13 @@ function Frisk() {
     this.pos = []
 
     this.update = function() {
-        this.pos = [getRandom(WIDTH), getRandom(HEIGHT)]
-        this.draw()
+        this.pos = [getRandom(Math.floor(WIDTH / 60)), getRandom(Math.floor(HEIGHT / 60))]
         console.log("frisk")
     }
 
     this.draw = function() {
+        ctx.fillStyle = this.color
+
         ctx.fillRect(this.pos[0] * tileSize, this.pos[1] * tileSize, tileSize, tileSize)
     }
 }
@@ -174,8 +175,9 @@ function Snake() {
 }
 
 function collision() {
-    if(snake.body[0] == frisk.pos) {
-        frisk.pos.pop()
+    console.log("tentando bater")
+    if(snake.nextPos == frisk.pos) {
+        console.log("bateu")
         frisk.update()
         snake.body.splice(0,0, snake.body[0])
     }
@@ -187,6 +189,7 @@ function update() {
 }
  
 function run() {
+    collision()
     update()
     draw()
     
@@ -196,6 +199,9 @@ function run() {
 function draw() {
     ctx.clearRect(0 ,0 ,WIDTH, HEIGHT)
 
+    if (playing) {
+        frisk.draw()
+    }
     snake.draw();
     if (!playing) {
         playLabel.draw()
