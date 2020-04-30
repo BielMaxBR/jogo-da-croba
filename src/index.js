@@ -102,7 +102,7 @@ function Frisk() {
     this.pos = []
 
     this.update = function() {
-        this.pos = [getRandom(50), getRandom(50)]
+        this.pos = [getRandom(500/tileSize-1), getRandom(500/tileSize-1)]
         console.log("frisk")
     }
 
@@ -138,7 +138,7 @@ function PlayLabel() {
     this.draw = function() {
         ctx.fillStyle = this.color
         ctx.font = tileSize*2 + "px Comic Sans MS"
-        ctx.fillText(this.text, 500 / 2 - ctx.measureText(this.text).width / 2, 500 / 2)
+        ctx.fillText(this.text, canvas.width/4 - ctx.measureText(this.text).width / tileSize, 500 / 2)
     }
 }
 
