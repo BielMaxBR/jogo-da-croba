@@ -143,7 +143,7 @@ function PlayLabel() {
 }
 
 function Snake() {
-    this.body = [[10,10],[10,11],[10,12]]
+    this.body = [[10,10],[10,10],[10,10]]
     this.color = '#000'
     this.direction = [0, -1]
 
@@ -196,11 +196,13 @@ function Snake() {
     this.draw = function() {
         ctx.fillStyle = this.color
         
-
-        for (var i = 0; i < this.body.length; i++) {
+        
+        for (var i = 1; i < this.body.length; i++) {
             ctx.fillRect(this.body[i][0] * tileSize+1, this.body[i][1] * tileSize+1, tileSize-2, tileSize-2)
             
         }
+        ctx.fillStyle = "#FFF"
+        ctx.fillRect(snake.body[0][0]*tileSize+1,snake.body[0][1]*tileSize+1, tileSize-2,tileSize-2)
     }
 }
 
@@ -212,7 +214,7 @@ function collision() {
         snake.body.splice(0,0, snake.body[0])
     }
     for (var i = 1; i < snake.body.length; i++) {
-        if(snake.body[0].toString() == i.toString()) {
+        if(snake.body[0][0] == i[0] &&snake.body[0][1] == i[1]) {
             console.log('i')
         }
         setTimeout(100)
@@ -229,13 +231,11 @@ function update() {
 function run() {
     update()
     draw()
-    
     setTimeout(run, (60/bpm)*1000)
 }
 
 function draw() {
     ctx.clearRect(0 ,0 ,500, 500)
-    
     if (playing) {
         frisk.draw()
     }
