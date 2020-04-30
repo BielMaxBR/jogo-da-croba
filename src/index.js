@@ -1,7 +1,7 @@
 var canvas, ctx, WIDTH, HEIGHT, bpm, tileSize;
 var snake, playLabel, frisk
 var globalTouch = [], offset = []
-
+var bpmb
 window.addEventListener("resize", resizeWindow)
 
 window.addEventListener("keydown", keyDown)
@@ -57,6 +57,15 @@ function keyDown(e) {
     if (e.key == "Enter") {
         playing = false
     }
+    if (e.key.toLowerCase() == "l") {
+        snake.body.splice(0,0, snake.body[0])
+    }
+    if (e.key.toLowerCase() == "c") {
+        bpmb = true
+    }
+    if (e.key.toLowerCase() == "v") {
+        bpmb = false
+    }
 }
 
 function init() {
@@ -75,10 +84,10 @@ function resizeWindow() {
     WIDTH = window.innerWidth
     HEIGHT = window.innerHeight
 
-    canvas.width = WIDTH
-    canvas.height = HEIGHT
+    canvas.width = 500
+    canvas.height = 500
 
-    tileSize = Math.max(Math.floor(WIDTH / 60), Math.floor(HEIGHT / 60))
+    tileSize = 10
 }
 
 function newGame() {
@@ -93,7 +102,7 @@ function Frisk() {
     this.pos = []
 
     this.update = function() {
-        this.pos = [getRandom(Math.floor(WIDTH / 60)), getRandom(Math.floor(HEIGHT / 60))]
+        this.pos = [getRandom(50), getRandom(50)]
         console.log("frisk")
     }
 
@@ -101,6 +110,8 @@ function Frisk() {
         ctx.fillStyle = this.color
 
         ctx.fillRect(this.pos[0] * tileSize, this.pos[1] * tileSize, tileSize, tileSize)
+        // ctx.fillStyle = "ffff00"
+        // ctx.strokeRect(this.pos[0] * tileSize, this.pos[1] * tileSize, tileSize, tileSize)
     }
 }
 
@@ -127,7 +138,7 @@ function PlayLabel() {
     this.draw = function() {
         ctx.fillStyle = this.color
         ctx.font = tileSize*2 + "px Comic Sans MS"
-        ctx.fillText(this.text, WIDTH / 2 - ctx.measureText(this.text).width / 2, HEIGHT / 2)
+        ctx.fillText(this.text, 500 / 2 - ctx.measureText(this.text).width / 2, 500 / 2)
     }
 }
 
@@ -140,16 +151,16 @@ function Snake() {
         var nextPos = [this.body[0][0] + this.direction[0],this.body[0][1] + this.direction[1]]
         
         if (!playing) {
-            if(this.direction[1] == -1 && nextPos[1] <= (HEIGHT * 0.1/ tileSize)) {
+            if(this.direction[1] == -1 && nextPos[1] <= (500 * 0.1/ tileSize)) {
                 this.direction = [1, 0]
             }
-            else if(this.direction[0] == 1 && nextPos[0] >= (WIDTH * 0.9/ tileSize)) {
+            else if(this.direction[0] == 1 && nextPos[0] >= (500 * 0.9/ tileSize)) {
                 this.direction = [0, 1]
             }
-            else if(this.direction[1] == 1 && nextPos[1] >= (HEIGHT * 0.9/ tileSize)) {
+            else if(this.direction[1] == 1 && nextPos[1] >= (500 * 0.9/ tileSize)) {
                 this.direction = [-1, 0]
             }
-            else if(this.direction[0] == -1 && nextPos[0] <= (WIDTH * 0.1/ tileSize)) {
+            else if(this.direction[0] == -1 && nextPos[0] <= (500 * 0.1/ tileSize)) {
                 this.direction = [0, -1]
             }
         }
@@ -160,24 +171,41 @@ function Snake() {
 
         }
 
-
-        this.body.pop()
-        this.body.splice(0,0, nextPos)
+        if (!bpmb) {
+            this.body.pop()
+            this.body.splice(0,0, nextPos)
+        }
+        
+        if (this.body[0][0] < 0) {
+            snake.body[0][0] = canvas.width/tileSize
+        }
+        if (this.body[0][0] > canvas.width/tileSize+1) {
+            snake.body[0][0] = 0
+        }
+        if (this.body[0][1] < 0) {
+            snake.body[0][1] = canvas.height/tileSize
+        }
+        if (this.body[0][1] > canvas.height/tileSize+1) {
+            snake.body[0][1] = 0
+        }
+        
     }
 
     this.draw = function() {
         ctx.fillStyle = this.color
+        
 
         for (var i = 0; i < this.body.length; i++) {
-            ctx.fillRect(this.body[i][0] * tileSize, this.body[i][1] * tileSize, tileSize, tileSize)
+            ctx.fillRect(this.body[i][0] * tileSize+1, this.body[i][1] * tileSize+1, tileSize-2, tileSize-2)
+            
         }
     }
 }
 
 function collision() {
-    console.log("tentando bater")
-    if(snake.nextPos == frisk.pos) {
-        console.log("bateu")
+    // console.log("tentando bater")
+    if(snake.body[0].toString() == frisk.pos.toString()) {
+        // console.log("bateu")
         frisk.update()
         snake.body.splice(0,0, snake.body[0])
     }
@@ -185,11 +213,11 @@ function collision() {
 
 function update() {
     snake.update()
- 
+    collision()
+    
 }
  
 function run() {
-    collision()
     update()
     draw()
     
@@ -197,8 +225,8 @@ function run() {
 }
 
 function draw() {
-    ctx.clearRect(0 ,0 ,WIDTH, HEIGHT)
-
+    ctx.clearRect(0 ,0 ,500, 500)
+    
     if (playing) {
         frisk.draw()
     }
