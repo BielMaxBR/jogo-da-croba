@@ -1,7 +1,7 @@
 var canvas, ctx, WIDTH, HEIGHT, bpm, tileSize;
 var snake, playLabel, frisk
 var globalTouch = [], offset = []
-var bpmb
+var bpmb, nohead
 window.addEventListener("resize", resizeWindow)
 
 window.addEventListener("keydown", keyDown)
@@ -38,19 +38,19 @@ function touchStart(e) {
 
 function keyDown(e) {
     
-    if(e.key == "ArrowUp" || e.key.toLowerCase() == "w") {
+    if(e.key == "ArrowUp"  && snake.direction.toString() != [0,1].toString()|| e.key.toLowerCase() == "w" && snake.direction.toString() != [0,1].toString()) {
             playing = true
         snake.direction = [0, -1]
     }
-    if(e.key == "ArrowDown" || e.key.toLowerCase() == "s") {
+    if(e.key == "ArrowDown" && snake.direction.toString() != [0,-1].toString()|| e.key.toLowerCase() == "s" && snake.direction.toString() != [0,-1].toString()) {
             playing = true
         snake.direction = [0, 1]
     }
-    if(e.key == "ArrowLeft" || e.key.toLowerCase() == "a") {
+    if(e.key == "ArrowLeft" && snake.direction.toString() != [1,0].toString()|| e.key.toLowerCase() == "a" && snake.direction.toString() != [1,0].toString()) {
             playing = true
         snake.direction = [-1, 0]
     }
-    if(e.key == "ArrowRight" || e.key.toLowerCase() == "d") {
+    if(e.key == "ArrowRight" && snake.direction.toString() != [-1,0].toString()|| e.key.toLowerCase() == "d" && snake.direction.toString() != [-1,0].toString()) {
             playing = true
         snake.direction = [1, 0]
     }
@@ -94,7 +94,7 @@ function newGame() {
     snake = new Snake()
     playLabel = new PlayLabel()
     frisk = new Frisk()
-    playing = false
+    playing = true
 }
 
 function Frisk() {
@@ -166,8 +166,10 @@ function Snake() {
         }
 
         if (nextPos[0] == this.body[1][0] && nextPos[1] == this.body[1][1]) {
-            this.body.reverse()
-            nextPos = [this.body[0][0] + this.direction[0],this.body[0][1] + this.direction[1]]
+            
+            
+            // this.body.reverse()
+             nextPos = [this.body[0][0] + this.direction[0],this.body[0][1] + this.direction[1]]
 
         }
 
@@ -209,6 +211,13 @@ function collision() {
         frisk.update()
         snake.body.splice(0,0, snake.body[0])
     }
+    for (var i = 1; i < snake.body.length; i++) {
+        if(snake.body[0].toString() == i.toString()) {
+            console.log('i')
+        }
+        setTimeout(100)
+    }
+    
 }
 
 function update() {
