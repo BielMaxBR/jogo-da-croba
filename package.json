@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/BielMaxBR/jogo-da-croba#readme",
   "dependencies": {
+    "heroku-cli": "^7.0.9",
     "nodemon": "^2.0.3"
   }
 }
