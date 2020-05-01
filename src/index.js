@@ -103,7 +103,6 @@ function Frisk() {
 
     this.update = function() {
         this.pos = [getRandom(500/tileSize-1), getRandom(500/tileSize-1)]
-        console.log("frisk")
     }
 
     this.draw = function() {
@@ -211,11 +210,13 @@ function collision() {
     if(snake.body[0].toString() == frisk.pos.toString()) {
         // console.log("bateu")
         frisk.update()
-        snake.body.splice(0,0, snake.body[0])
+        snake.body.splice(1,0, snake.body[1])
     }
     for (var i = 1; i < snake.body.length; i++) {
-        if(snake.body[0][0] == i[0] &&snake.body[0][1] == i[1]) {
-            console.log('i')
+        
+        if(snake.body[0].toString() == snake.body[i].toString()) {
+            console.log('hoje sim')
+            break
         }
         setTimeout(100)
     }
