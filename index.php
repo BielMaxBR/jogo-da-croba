@@ -1,5 +1,5 @@
 <?php
     oi;
-  include_once("/src/index.html");
+  include_once("./src/index.html");
 
 ?>
